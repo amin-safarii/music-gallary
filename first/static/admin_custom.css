@@ -1,0 +1,46 @@
+html, body, #main, .wrapper, .content-wrapper,
+.main-sidebar, .main-header, .content, #content-main,
+#content, #changelist, .module, fieldset, .form-row,
+.related-widget-wrapper, .change-list {
+    background-color: #0d1b2a !important;
+}
+
+.card, .card-body, .card-header, .card-footer {
+    background-color: #112240 !important;
+    border-color: #1e3a5f !important;
+}
+
+.table, .table td, .table th,
+#result_list td, #result_list th {
+    background-color: #112240 !important;
+    color: #e0e0e0 !important;
+    border-color: #1e3a5f !important;
+}
+
+#result_list thead th {
+    background-color: #1a2f4a !important;
+}
+
+input[type=text], input[type=password], input[type=email],
+input[type=number], textarea, select, .form-control {
+    background-color: #1a2f4a !important;
+    color: #e0e0e0 !important;
+    border-color: #2d4f7c !important;
+}
+
+.breadcrumb, .breadcrumb-item {
+    background-color: #0d1b2a !important;
+}
+
+tr:nth-child(even) { background-color: #0f1e30 !important; }
+tr:hover { background-color: #1e3a5f !important; }
+.main-sidebar, .sidebar {
+    display: none !important;
+}
+.content-wrapper, .main-footer {
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+}
+.wrapper {
+    padding-right: 0 !important;
+}

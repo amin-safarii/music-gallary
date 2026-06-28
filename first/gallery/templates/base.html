@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}گالری هنری{% endblock %}</title>
+    <meta name="description" content="{% block meta_description %}گالری آثار هنری و موسیقی کلاسیک{% endblock %}">
+
+    <!-- Open Graph / تلگرام و واتساپ -->
+    <meta property="og:type" content="{% block og_type %}website{% endblock %}">
+    <meta property="og:site_name" content="گالری هنری">
+    <meta property="og:title" content="{% block og_title %}گالری هنری{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}گالری آثار هنری و موسیقی کلاسیک{% endblock %}">
+    <meta property="og:url" content="{{ request.build_absolute_uri }}">
+    <meta property="og:locale" content="fa_IR">
+    {% block og_image %}
+    {% if artist and artist.image %}
+        <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ artist.image.url }}">
+    {% endif %}
+    {% endblock %}
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{% block twitter_title %}گالری هنری{% endblock %}">
+    <meta name="twitter:description" content="{% block twitter_description %}گالری آثار هنری و موسیقی کلاسیک{% endblock %}">
+    {% block twitter_image %}
+    {% if artist and artist.image %}
+        <meta name="twitter:image" content="{{ request.scheme }}://{{ request.get_host }}{{ artist.image.url }}">
+    {% endif %}
+    {% endblock %}
+
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Vazirmatn:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+
+    <style>
+        /* تم ۱: Dark Luxury */
+        :root {
+            --gold:        #c9a84c;
+            --gold-light:  #e8c97a;
+            --gold-dim:    #7a6030;
+            --cream:       #e8d5a3;
+            --cream-dim:   #a09080;
+            --bg-void:     #06060a;
+            --bg-deep:     #0a0a0f;
+            --bg-card:     #0f0e1a;
+            --border-gold: #2a2010;
+            --border-dim:  #1a1508;
+            --accent:      #c9a84c;
+            --accent-dim:  #7a6030;
+            --text-main:   #e8d5a3;
+            --text-dim:    #a09080;
+            --text-muted:  #5a4a3a;
+            --navbar-bg:   rgba(6,6,10,0.95);
+        }
+        {% if active_theme == 'midnight_blue' %}
+        :root {
+            --gold:        #7eb8d4;
+            --gold-light:  #a8d4e8;
+            --gold-dim:    #3a6a80;
+            --cream:       #d0e8f4;
+            --cream-dim:   #80a8bc;
+            --bg-void:     #020810;
+            --bg-deep:     #050e1a;
+            --bg-card:     #0a1628;
+            --border-gold: #0f2a40;
+            --border-dim:  #081828;
+            --accent:      #7eb8d4;
+            --accent-dim:  #3a6a80;
+            --text-main:   #d0e8f4;
+            --text-dim:    #80a8bc;
+            --text-muted:  #304858;
+            --navbar-bg:   rgba(2,8,16,0.95);
+        }
+        {% endif %}
+        {% if active_theme == 'ivory_classic' %}
+        :root {
+            --gold:        #8b5e3c;
+            --gold-light:  #6b3e1c;
+            --gold-dim:    #c4956a;
+            --cream:       #1a1a1a;
+            --cream-dim:   #444444;
+            --bg-void:     #f5f0e8;
+            --bg-deep:     #faf7f2;
+            --bg-card:     #ffffff;
+            --border-gold: #d8cfc0;
+            --border-dim:  #e8e0d0;
+            --accent:      #8b5e3c;
+            --accent-dim:  #c4956a;
+            --text-main:   #1a1a1a;
+            --text-dim:    #555555;
+            --text-muted:  #aaaaaa;
+            --navbar-bg:   rgba(245,240,232,0.97);
+        }
+        {% endif %}
+        {% if active_theme == 'deep_emerald' %}
+        :root {
+            --gold:        #4caf7d;
+            --gold-light:  #6dd49a;
+            --gold-dim:    #2a6b4a;
+            --cream:       #c8edd8;
+            --cream-dim:   #7aaa90;
+            --bg-void:     #010a05;
+            --bg-deep:     #03100a;
+            --bg-card:     #071a0f;
+            --border-gold: #0f2e1a;
+            --border-dim:  #081a0e;
+            --accent:      #4caf7d;
+            --accent-dim:  #2a6b4a;
+            --text-main:   #c8edd8;
+            --text-dim:    #7aaa90;
+            --text-muted:  #2a4a38;
+            --navbar-bg:   rgba(1,10,5,0.95);
+        }
+        {% endif %}
+        {% if active_theme == 'crimson_night' %}
+        :root {
+            --gold:        #c94c4c;
+            --gold-light:  #e87a7a;
+            --gold-dim:    #7a2a2a;
+            --cream:       #f0d0d0;
+            --cream-dim:   #b08080;
+            --bg-void:     #0a0303;
+            --bg-deep:     #0f0505;
+            --bg-card:     #1a0808;
+            --border-gold: #2e1010;
+            --border-dim:  #1a0808;
+            --accent:      #c94c4c;
+            --accent-dim:  #7a2a2a;
+            --text-main:   #f0d0d0;
+            --text-dim:    #b08080;
+            --text-muted:  #5a3030;
+            --navbar-bg:   rgba(10,3,3,0.95);
+        }
+        {% endif %}
+
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background-color: var(--bg-deep);
+            color: var(--text-dim);
+            min-height: 100vh;
+            transition: background-color 0.4s, color 0.4s;
+        }
+        a { text-decoration: none; color: inherit; }
+
+        .navbar-luxury {
+            background: var(--navbar-bg);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-gold);
+            position: sticky; top: 0; z-index: 1000;
+        }
+        .navbar-luxury .container {
+            display: flex; align-items: center;
+            justify-content: space-between; height: 64px; gap: 24px;
+        }
+        .brand-logo {
+            font-family: 'Cinzel', serif; font-size: 20px; font-weight: 700;
+            color: var(--gold); letter-spacing: 2px; white-space: nowrap; transition: color 0.3s;
+        }
+        .brand-logo:hover { color: var(--gold-light); }
+        .nav-links {
+            display: flex; align-items: center;
+            gap: 6px; list-style: none; margin: 0; padding: 0;
+        }
+        .nav-links a {
+            font-size: 13px; color: var(--text-dim);
+            padding: 8px 14px; border-radius: 4px;
+            transition: color 0.2s, background 0.2s;
+        }
+        .nav-links a:hover { color: var(--gold); background: rgba(128,128,128,0.07); }
+        .nav-dropdown { position: relative; }
+        .nav-dropdown-menu {
+            display: none; position: absolute;
+            top: calc(100% + 8px); right: 0;
+            background: var(--bg-card); border: 1px solid var(--border-gold);
+            border-radius: 8px; min-width: 160px; padding: 6px; z-index: 100;
+        }
+        .nav-dropdown:hover .nav-dropdown-menu { display: block; }
+        .nav-dropdown-menu a {
+            display: block; padding: 8px 14px; font-size: 13px;
+            color: var(--text-dim); border-radius: 4px; transition: color 0.2s;
+        }
+        .nav-dropdown-menu a:hover { color: var(--gold); }
+        .nav-toggler {
+            display: none; background: none;
+            border: 1px solid var(--border-gold); border-radius: 6px;
+            padding: 6px 10px; color: var(--gold); cursor: pointer; font-size: 18px;
+        }
+        @media (max-width: 768px) {
+            .nav-toggler { display: block; }
+            .nav-links {
+                display: none; position: absolute;
+                top: 64px; right: 0; left: 0;
+                background: var(--bg-void); border-bottom: 1px solid var(--border-gold);
+                flex-direction: column; padding: 16px; gap: 4px;
+            }
+            .nav-links.open { display: flex; }
+        }
+        .ornament { display:flex; align-items:center; justify-content:center; gap:8px; margin:12px auto; }
+        .ornament-line { width:40px; height:1px; background:linear-gradient(90deg,transparent,var(--gold)); }
+        .ornament-line.rev { background:linear-gradient(90deg,var(--gold),transparent); }
+        .ornament-diamond { width:6px; height:6px; background:var(--gold); transform:rotate(45deg); opacity:0.8; }
+        .section-eyebrow { font-family:'Cinzel',serif; font-size:10px; letter-spacing:4px; color:var(--accent); text-transform:uppercase; margin-bottom:6px; }
+        .section-title { font-family:'Cinzel',serif; font-size:22px; font-weight:600; color:var(--text-main); margin-bottom:0; }
+        .art-card { background:var(--bg-card); border:1px solid var(--border-gold); border-radius:10px; overflow:hidden; transition:transform 0.3s,border-color 0.3s; }
+        .art-card:hover { transform:translateY(-4px); border-color:var(--accent-dim); }
+        .art-card img { width:100%; object-fit:cover; display:block; }
+        .art-card-body { padding:16px; }
+        .art-card-cat { font-size:11px; color:var(--accent); letter-spacing:1px; margin-bottom:6px; font-family:'Cinzel',serif; }
+        .art-card-title { font-size:15px; color:var(--text-main); font-weight:600; margin-bottom:4px; line-height:1.5; }
+        .art-card-date { font-size:11px; color:var(--text-muted); }
+        .btn-gold { border:1px solid var(--gold); color:var(--gold); background:transparent; padding:8px 22px; border-radius:24px; font-size:13px; cursor:pointer; display:inline-block; transition:background 0.25s,color 0.25s; font-family:'Vazirmatn',sans-serif; }
+        .btn-gold:hover { background:var(--gold); color:var(--bg-void); }
+        .btn-gold-fill { background:var(--gold); color:var(--bg-void); padding:10px 28px; border-radius:24px; font-size:13px; font-weight:600; border:none; cursor:pointer; display:inline-block; transition:opacity 0.25s; font-family:'Vazirmatn',sans-serif; }
+        .btn-gold-fill:hover { opacity:0.85; }
+        .cat-pill { border:1px solid var(--border-gold); color:var(--text-dim); background:transparent; padding:8px 20px; border-radius:24px; font-size:13px; display:inline-block; transition:border-color 0.2s,color 0.2s; }
+        .cat-pill:hover,.cat-pill.active { border-color:var(--gold); color:var(--gold); }
+        .footer-luxury { background:var(--bg-void); border-top:1px solid var(--border-dim); padding:40px 0 24px; margin-top:80px; }
+        .footer-brand { font-family:'Cinzel',serif; font-size:18px; color:var(--gold); letter-spacing:2px; margin-bottom:8px; }
+        .footer-copy { font-size:12px; color:var(--text-muted); }
+        .footer-social a { color:var(--text-muted); font-size:13px; margin-right:16px; transition:color 0.2s; }
+        .footer-social a:hover { color:var(--gold); }
+        @keyframes fadeUp { from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);} }
+        .fade-up { animation:fadeUp 0.7s ease both; }
+        .fade-up-1{animation-delay:0.1s;} .fade-up-2{animation-delay:0.2s;} .fade-up-3{animation-delay:0.3s;} .fade-up-4{animation-delay:0.4s;}
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+<nav class="navbar-luxury">
+    <div class="container">
+        <a href="{% url 'home' %}" class="brand-logo">🎼 melika safari</a>
+            <form action="/search/" method="get" style="display:flex;gap:6px;align-items:center;margin-right:8px;">
+                <input type="text" name="q" placeholder="جستجو..."
+                       style="background:var(--bg-card);border:1px solid var(--border-gold);border-radius:20px;padding:6px 14px;color:var(--text-main);font-family:Vazirmatn,sans-serif;font-size:13px;width:150px;outline:none;transition:border-color 0.2s,width 0.3s;"
+                       onfocus="this.style.borderColor='var(--gold)';this.style.width='190px'"
+                       onblur="this.style.borderColor='var(--border-gold)';this.style.width='150px'">
+                <button type="submit" style="background:none;border:none;color:var(--gold);cursor:pointer;font-size:16px;padding:0;">🔍</button>
+            </form>
+        <button class="nav-toggler" onclick="toggleNav()" aria-label="منو">☰</button>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="{% url 'post_list' %}">آثار</a></li>
+            <li class="nav-dropdown">
+                <a href="#">دسته‌بندی‌ها ▾</a>
+                <div class="nav-dropdown-menu">
+                    {% for cat in categories %}
+                        <a href="{% url 'category_list' cat.slug %}">{{ cat.title }}</a>
+                    {% endfor %}
+                </div>
+            </li>
+            <li><a href="{% url 'about' %}">درباره من</a></li>
+            {% if user.is_staff %}
+            <li><a href="/admin/" style="color:var(--accent);border:1px solid var(--accent-dim);padding:6px 14px;border-radius:20px;font-size:12px;">پنل ادمین</a></li>
+            {% endif %}
+        </ul>
+    </div>
+</nav>
+
+<main>{% block content %}{% endblock %}</main>
+
+<footer class="footer-luxury">
+    <div class="container text-center">
+        <div class="footer-brand">🎼 melika safari</div>
+        <div class="ornament" style="margin:12px auto;">
+            <div class="ornament-line"></div>
+            <div class="ornament-diamond"></div>
+            <div class="ornament-line rev"></div>
+        </div>
+        {% if artist %}
+        <div class="footer-social mb-3">
+            {% if artist.instagram %}<a href="https://instagram.com/{{ artist.instagram }}" target="_blank">اینستاگرام</a>{% endif %}
+            {% if artist.email %}<a href="mailto:{{ artist.email }}">ایمیل</a>{% endif %}
+        </div>
+        {% endif %}
+        <div class="footer-copy">طراحی سایت amin.safari.qaz@gmail.com</div>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+function toggleNav() {
+    document.getElementById('navLinks').classList.toggle('open');
+}
+</script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

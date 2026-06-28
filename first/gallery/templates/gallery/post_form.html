@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow border-0" style="border-radius: 15px; background: rgba(255,255,255,0.9);">
+                <div class="card-body p-4">
+                    <h2 class="mb-4 text-dark text-center">✏️ ویرایش اثر: {{ post.title }}</h2>
+                    <hr>
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg">ذخیره تغییرات</button>
+                            <a href="{% url 'post_detail' post.id %}" class="btn btn-outline-secondary">انصراف و بازگشت</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* استایل سریع برای زیباتر شدن فرم */
+    input, textarea, select { width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 8px; border: 1px solid #ddd; }
+    label { font-weight: bold; margin-bottom: 5px; color: #333; display: block; }
+</style>
+{% endblock %}
