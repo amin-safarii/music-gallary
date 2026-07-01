@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+{% block title %}خانه | گالری هنری{% endblock %}
+{% block meta_description %}گالری آثار {{ artist.name }} — موسیقی و هنر کلاسیک{% endblock %}
+
+{% block content %}
+
+<!-- HERO -->
+<section style="background: linear-gradient(180deg, #0f0e1a 0%, var(--bg-deep) 100%); padding: 80px 0 60px; border-bottom: 1px solid var(--border-dim); text-align: center;">
+    <div class="container">
+        {% if artist and artist.image %}
+            <div class="fade-up" style="margin-bottom: 20px;">
+                <img src="{{ artist.image.url }}" alt="{{ artist.name }}"
+                     style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover;
+                            border: 2px solid var(--gold); padding: 3px;
+                            background: var(--bg-void);">
+            </div>
+        {% else %}
+            <div class="fade-up" style="width:120px;height:120px;border-radius:50%;background:var(--bg-card);border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font-size:48px;margin:0 auto 20px;">🎻</div>
+        {% endif %}
+
+        <div class="fade-up fade-up-1">
+            <div class="section-eyebrow">هنرمند</div>
+            <h1 style="font-family:'Cinzel',serif; font-size:36px; font-weight:700; color:var(--cream); letter-spacing:2px; margin: 8px 0 12px;">
+                {{ artist.name }}
+            </h1>
+        </div>
+
+        <p class="fade-up fade-up-2" style="max-width: 500px; margin: 0 auto 24px; font-size: 14px; line-height: 2; color: var(--cream-dim);">
+            {{ artist.bio|truncatewords:25 }}
+        </p>
+
+        <div class="ornament fade-up fade-up-3">
+            <div class="ornament-line"></div>
+            <div class="ornament-diamond"></div>
+            <div class="ornament-line rev"></div>
+        </div>
+    </div>
+</section>
+
+<!-- FEATURED POSTS -->
+<section style="padding: 64px 0;">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-end mb-4">
+            <div class="fade-up">
+                <div class="section-eyebrow">منتخب</div>
+                <h2 class="section-title">آثار برگزیده</h2>
+            </div>
+            <a href="{% url 'post_list' %}" class="btn-gold fade-up">مشاهده همه</a>
+        </div>
+
+        <div class="row g-4">
+            {% for post in featured_posts %}
+            <div class="col-6 col-lg-3 fade-up fade-up-{{ forloop.counter }}">
+                <a href="{% url 'post_detail' post.slug %}">
+                    <div class="art-card h-100">
+                        {% if post.image %}
+                            <img src="{{ post.image.url }}" alt="{{ post.title }}" style="height:200px;">
+                        {% else %}
+                            <div style="height:200px;background:linear-gradient(135deg,var(--bg-card),#1a1508);display:flex;align-items:center;justify-content:center;font-size:48px;">🎵</div>
+                        {% endif %}
+                        <div class="art-card-body">
+                            <div class="art-card-cat">{{ post.category.title }}</div>
+                            <div class="art-card-title">{{ post.title }}</div>
+                            <div class="art-card-date">{{ post.created_at|date:"Y/m/d" }}</div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center" style="color:var(--cream-dim); padding:40px 0;">
+                هنوز اثری منتشر نشده است
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- CATEGORIES -->
+<section style="padding: 0 0 64px; border-top: 1px solid var(--border-dim);">
+    <div class="container" style="padding-top:48px;">
+        <div class="text-center mb-4 fade-up">
+            <div class="section-eyebrow">دسته‌بندی</div>
+            <h2 class="section-title">مجموعه‌ها</h2>
+        </div>
+        <div class="d-flex flex-wrap justify-content-center gap-3 fade-up fade-up-1">
+            {% for cat in categories %}
+                <a href="{% url 'category_list' cat.slug %}" class="cat-pill">{{ cat.title }}</a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about-section" style="background: var(--bg-void); border-top: 1px solid var(--border-dim); border-bottom: 1px solid var(--border-dim); padding: 72px 0;">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            {% if artist and artist.image %}
+            <div class="col-12 col-md-4 text-center fade-up">
+                <img src="{{ artist.image.url }}" alt="{{ artist.name }}"
+                     style="width:200px;height:200px;border-radius:50%;object-fit:cover;border:2px solid var(--gold);padding:4px;background:var(--bg-deep);">
+            </div>
+            {% endif %}
+            <div class="col-12 col-md-{% if artist and artist.image %}8{% else %}12{% endif %} fade-up fade-up-1">
+                <div class="section-eyebrow">درباره من</div>
+                <h2 class="section-title" style="margin-bottom:20px;">{{ artist.name }}</h2>
+                <div class="ornament" style="justify-content:flex-start; margin-bottom:20px;">
+                    <div class="ornament-line" style="width:60px;"></div>
+                    <div class="ornament-diamond"></div>
+                </div>
+                <p style="line-height:2.2; font-size:14px; color:var(--cream-dim); text-align:justify;">
+                    {{ artist.bio|linebreaks }}
+                </p>
+                <div class="mt-4 d-flex gap-3 flex-wrap">
+                    {% if artist.instagram %}
+                        <a href="https://instagram.com/{{ artist.instagram }}" target="_blank" class="btn-gold">اینستاگرام</a>
+                    {% endif %}
+                    {% if artist.email %}
+                        <a href="mailto:{{ artist.email }}" class="btn-gold">ارتباط با من</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

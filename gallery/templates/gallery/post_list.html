@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+{% block title %}{% if current_category %}{{ current_category.title }}{% else %}همه آثار{% endif %} | گالری هنری{% endblock %}
+
+{% block content %}
+
+<!-- PAGE HEADER -->
+<section style="background:linear-gradient(180deg,#0f0e1a 0%,var(--bg-deep) 100%);padding:56px 0 48px;border-bottom:1px solid var(--border-dim);text-align:center;">
+    <div class="container fade-up">
+        <div class="section-eyebrow">{% if current_category %}دسته‌بندی{% else %}آرشیو{% endif %}</div>
+        <h1 class="section-title" style="font-size:28px;">
+            {% if current_category %}{{ current_category.title }}{% else %}همه آثار{% endif %}
+        </h1>
+        <div class="ornament" style="margin-top:16px;">
+            <div class="ornament-line"></div>
+            <div class="ornament-diamond"></div>
+            <div class="ornament-line rev"></div>
+        </div>
+    </div>
+</section>
+
+<!-- CATEGORY FILTER -->
+<section style="padding:32px 0;border-bottom:1px solid var(--border-dim);">
+    <div class="container">
+        <div class="d-flex flex-wrap justify-content-center gap-2">
+            <a href="{% url 'post_list' %}" class="cat-pill {% if not current_category %}active{% endif %}">همه</a>
+            {% for cat in categories %}
+                <a href="{% url 'category_list' cat.slug %}"
+                   class="cat-pill {% if current_category.slug == cat.slug %}active{% endif %}">
+                    {{ cat.title }}
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- POSTS GRID -->
+<section style="padding:56px 0;">
+    <div class="container">
+
+        <!-- تعداد کل آثار -->
+        <div class="mb-4 fade-up" style="font-size:13px;color:var(--text-muted);">
+            {{ paginator.count }} اثر
+            {% if page_obj.has_other_pages %}
+                — صفحه {{ page_obj.number }} از {{ paginator.num_pages }}
+            {% endif %}
+        </div>
+
+        <div class="row g-4">
+            {% for work in posts %}
+            <div class="col-6 col-lg-4 fade-up" style="animation-delay:{{ forloop.counter0 }}00ms;">
+                <a href="{% url 'post_detail' work.slug %}">
+                    <div class="art-card h-100">
+                        {% if work.image %}
+                            <img src="{{ work.image.url }}" alt="{{ work.title }}" style="height:220px;">
+                        {% else %}
+                            <div style="height:220px;background:linear-gradient(135deg,var(--bg-card),var(--border-gold));display:flex;align-items:center;justify-content:center;font-size:52px;">🎼</div>
+                        {% endif %}
+                        <div class="art-card-body">
+                            <div class="art-card-cat">{{ work.category.title }}</div>
+                            <div class="art-card-title">{{ work.title }}</div>
+                            {% if work.content %}
+                                <p style="font-size:12px;color:var(--text-muted);margin:6px 0 0;line-height:1.7;">{{ work.content|truncatewords:12 }}</p>
+                            {% endif %}
+                            <div class="art-card-date" style="margin-top:10px;">{{ work.created_at|date:"j F Y" }}</div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center fade-up" style="padding:80px 0;">
+                <div style="font-size:48px;margin-bottom:16px;">🎵</div>
+                <p style="color:var(--text-dim);">هنوز اثری منتشر نشده است</p>
+                <a href="{% url 'post_list' %}" class="btn-gold" style="margin-top:12px;">بازگشت به همه آثار</a>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- PAGINATION -->
+        {% if page_obj.has_other_pages %}
+        <div class="fade-up" style="margin-top:56px;">
+            <div class="ornament" style="margin-bottom:28px;">
+                <div class="ornament-line"></div>
+                <div class="ornament-diamond"></div>
+                <div class="ornament-line rev"></div>
+            </div>
+            <div style="display:flex;justify-content:center;align-items:center;gap:8px;flex-wrap:wrap;">
+
+                <!-- دکمه قبلی -->
+                {% if page_obj.has_previous %}
+                    <a href="?page={{ page_obj.previous_page_number }}{% if current_category %}&cat={{ current_category.slug }}{% endif %}"
+                       style="display:flex;align-items:center;gap:6px;border:1px solid var(--border-gold);color:var(--text-dim);padding:8px 18px;border-radius:24px;font-size:13px;transition:all 0.2s;"
+                       onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'"
+                       onmouseout="this.style.borderColor='var(--border-gold)';this.style.color='var(--text-dim)'">
+                        ← قبلی
+                    </a>
+                {% endif %}
+
+                <!-- شماره صفحات -->
+                {% for num in paginator.page_range %}
+                    {% if page_obj.number == num %}
+                        <span style="width:38px;height:38px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:var(--gold);color:var(--bg-void);font-size:13px;font-weight:600;">
+                            {{ num }}
+                        </span>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                        <a href="?page={{ num }}{% if current_category %}&cat={{ current_category.slug }}{% endif %}"
+                           style="width:38px;height:38px;display:flex;align-items:center;justify-content:center;border-radius:50%;border:1px solid var(--border-gold);color:var(--text-dim);font-size:13px;transition:all 0.2s;"
+                           onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'"
+                           onmouseout="this.style.borderColor='var(--border-gold)';this.style.color='var(--text-dim)'">
+                            {{ num }}
+                        </a>
+                    {% endif %}
+                {% endfor %}
+
+                <!-- دکمه بعدی -->
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}{% if current_category %}&cat={{ current_category.slug }}{% endif %}"
+                       style="display:flex;align-items:center;gap:6px;border:1px solid var(--border-gold);color:var(--text-dim);padding:8px 18px;border-radius:24px;font-size:13px;transition:all 0.2s;"
+                       onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'"
+                       onmouseout="this.style.borderColor='var(--border-gold)';this.style.color='var(--text-dim)'">
+                        بعدی →
+                    </a>
+                {% endif %}
+
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
+</section>
+
+{% endblock %}
