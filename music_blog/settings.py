@@ -4,11 +4,11 @@ import os
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-SECRET_KEY = 'django-insecure-change-this-in-production'
+SECRET_KEY = 'django-insecure-x9!@#k2m4n5p6q7r8s9t0u1v2w3x4y5z6a7b8c9d0e1f2g3h4i5j6k7l8m9n0o1p'
 
 DEBUG = False
 
-ALLOWED_HOSTS = ['melikasafari.pythonanywhere.com']
+ALLOWED_HOSTS = ['melikasafari.runflare.run', 'localhost', '127.0.0.1', '*']
 
 
 INSTALLED_APPS = [
@@ -90,17 +90,17 @@ USE_I18N = True
 USE_TZ = True
 
 
-STATIC_URL = '/static/'
+STATIC_URL = '/public/static/'
 
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
 
-STATIC_ROOT = BASE_DIR / "staticfiles"
+STATIC_ROOT = BASE_DIR / "public" / "static"
 
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_URL = '/public/media/'
+MEDIA_ROOT = BASE_DIR / 'public' / 'media'
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
@@ -207,4 +207,3 @@ JAZZMIN_UI_TWEAKS = {
         "success":   "btn-outline-success",
     },
 }
-
